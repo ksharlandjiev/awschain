@@ -1,0 +1,17 @@
+requests
+boto3
+python-dotenv
+pyperclip
+spacy
+pytubefix
+moviepy
+pdfminer.six
+bs4
+jsonpath_ng
+python-docx
+python-pptx
+openpyxl
+python-ffmpeg
+fitz
+pymupdf
+pillow
