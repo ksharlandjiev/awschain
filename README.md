@@ -26,7 +26,10 @@ pip install awschain
 Let’s say you want to process files by first reading their content, performing a summarization using Generative AI, and then writing the results to another location. You can achieve this by defining a chain with three handlers: `LocalFileReaderHandler`, `PromptHandler`, `AmazonBedrockHandler`, and `LocalFileWriterHandler`.
 
 ```python
-from awschain.handler_factory import HandlerFactory
+from awschain import HandlerFactory, ConfigLoader
+
+# Load config
+ConfigLoader.load_config("/path/to/config.yaml")
 
 # Create the handlers
 reader = HandlerFactory.get_handler("LocalFileReaderHandler")
@@ -37,10 +40,10 @@ writer = HandlerFactory.get_handler("LocalFileWriterHandler")
 # Set up the chain
 reader.set_next(prompt_handler).set_next(transformer).set_next(writer)
 
+# Please store your prompt in your root of your project in prompts folder. Example: prompts/default_prompt.txt
+
 # Define the request
 request = {"file_path": "example.txt", "write_file_path": "output.txt", "prompt": "default_prompt"}
-
-NOTE: Please store your prompt in your root of your project in prompts folder. Example: prompts/default_prompt.txt
 
 # Execute the chain
 reader.handle(request)
