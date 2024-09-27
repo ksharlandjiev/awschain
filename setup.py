@@ -22,6 +22,9 @@ setup(
     url="https://github.com/ksharlandjiev/awschain",
     packages=find_packages(where="src"),
     package_dir={"": "src"},
+    include_package_data=True,
+    package_data={"awschain": ["**/*.py"]},
+    zip_safe=False,
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers, Data Engineers",
@@ -32,4 +35,5 @@ setup(
     ],
     python_requires=">=3.7",
     install_requires=requirements,  # Optional if requirements.txt doesn't exist
+    test_suite='tests',
 )
