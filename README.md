@@ -72,9 +72,9 @@ Processors:
 - **PromptHandler**: Uses a minimalistic prompt framework - all your prompts can be stored in the prompts/ folder and you can select which prompt to use when invoking the main.py.
 
 Writers:
--**S3WriterHandler**: Manages the uploading of of S3 objects (files) to Amazon S3.
--**LocalFileWriterHandler**: Writes output into a local file.
--**ClipboardWriterHandler**: Writes output into clipboard.
+- **S3WriterHandler**: Manages the uploading of of S3 objects (files) to Amazon S3.
+- **LocalFileWriterHandler**: Writes output into a local file.
+- **ClipboardWriterHandler**: Writes output into clipboard.
 
 You can also create your own custom handlers by extending the base `Handler` class.
 
