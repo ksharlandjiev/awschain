@@ -15,35 +15,36 @@
 
 You can install `awschain` directly from PyPI:
 
-\`\`\`bash
+```bash
 pip install awschain
-\`\`\`
+```
 
 ## Usage
 
-### Creating a Chain of Handlers
+## Example Use Case
 
-Here’s an example of how to create and use a custom chain of responsibility with the `awschain` package:
+Let’s say you want to process files by first reading their content, performing a summarization using Generative AI, and then writing the results to another location. You can achieve this by defining a chain with three handlers: `LocalFileReaderHandler`, `PromptHandler`, `AmazonBedrockHandler`, and `LocalFileWriterHandler`.
 
-\`\`\`python
+```python
 from awschain.handler_factory import HandlerFactory
 
-# Create handlers
-handler_a = HandlerFactory.get_handler("HandlerA")
-handler_b = HandlerFactory.get_handler("HandlerB")
-handler_c = HandlerFactory.get_handler("HandlerC")
+# Create the handlers
+reader = HandlerFactory.get_handler("LocalFileReaderHandler")
+prompt_handler = HandlerFactory.get_handler("PromptHandler")
+transformer = HandlerFactory.get_handler("AmazonBedrockHandler")
+writer = HandlerFactory.get_handler("LocalFileWriterHandler")
 
 # Set up the chain
-handler_a.set_next(handler_b).set_next(handler_c)
+reader.set_next(prompt_handler).set_next(transformer).set_next(writer)
 
-# Input to be processed
-request = {"data": "input_data"}
+# Define the request
+request = {"file_path": "example.txt", "write_file_path": "output.txt", "prompt": "default_prompt"}
 
-# Start the chain
-response = handler_a.handle(request)
+NOTE: Please store your prompt in your root of your project in prompts folder. Example: prompts/default_prompt.txt
 
-print(response)
-\`\`\`
+# Execute the chain
+reader.handle(request)
+```
 
 ### Built-in Handlers
 
@@ -77,11 +78,13 @@ Writers:
 
 You can also create your own custom handlers by extending the base `Handler` class.
 
-### Custom Handlers
+## Extending awschain
 
-To create a custom handler, simply subclass the `Handler` class and implement the `handle` method:
+If you need to add custom functionality, you can extend the framework by writing custom handlers and integrating them into the chain.
 
-\`\`\`python
+To create a custom handler, simply subclass the `AbstractHandler` class and implement the `handle` method:
+
+```python
 from awschainhandlers.abstract_handler import AbstractHandler
 
 class CustomHandler(AbstractHandler):
@@ -91,36 +94,7 @@ class CustomHandler(AbstractHandler):
             print("Handling custom request.")
         # Pass to the next handler in the chain if applicable
         return super().handle(request)
-\`\`\`
-
-## Example Use Case
-
-Let’s say you want to process files by first reading their content, performing a summarization using Generative AI, and then writing the results to another location. You can achieve this by defining a chain with three handlers: `LocalFileReaderHandler`, `PromptHandler`, `AmazonBedrockHandler`, and `LocalFileWriterHandler`.
-
-\`\`\`python
-from awschain.handler_factory import HandlerFactory
-
-# Create the handlers
-reader = HandlerFactory.get_handler("LocalFileReaderHandler")
-prompt_handler = HandlerFactory.get_handler("PromptHandler")
-transformer = HandlerFactory.get_handler("AmazonBedrockHandler")
-writer = HandlerFactory.get_handler("LocalFileWriterHandler")
-
-# Set up the chain
-reader.set_next(prompt_handler).set_next(transformer).set_next(writer)
-
-# Define the request
-request = {"file_path": "example.txt", "write_file_path": "output.txt", "prompt": "default_prompt"}
-
-NOTE: Please store your prompt in your root of your project in prompts folder. Example: prompts/default_prompt.txt
-
-# Execute the chain
-reader.handle(request)
-\`\`\`
-
-## Extending awschain
-
-If you need to add custom functionality, you can extend the framework by writing custom handlers and integrating them into the chain.
+```
 
 ## Contributing
 
