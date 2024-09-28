@@ -10,7 +10,7 @@ import argparse
 
 
 # Load config
-ConfigLoader.load_config()
+ConfigLoader.load_config('../config.yaml')
 
 def determine_input_type(file_path):
     if "youtube" in file_path or "youtu.be" in file_path:

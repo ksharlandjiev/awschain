@@ -27,7 +27,7 @@ setup(
     zip_safe=False,
     classifiers=[
         "Development Status :: 3 - Alpha",
-        "Intended Audience :: Developers, Data Engineers",
+        "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3.8",
