@@ -1,8 +1,14 @@
-# .env file
+# config.yaml
+DEBUG: False
+
+# Custom handlers location
+custom_handlers_path: "handlers"
+
 # AWS Specific configuration
 BEDROCK_ASSUME_ROLE: "None"
 AWS_DEFAULT_REGION: "us-east-1"
 
+# Amazon Transcribe Settings 
 # Amazon S3 bucket used for Amazon transcribe
 BUCKET_NAME: "your-s3-bucket-name"
 S3_FOLDER: "uploads/"
@@ -31,11 +37,3 @@ AMAZON_BEDROCK_OUTPUT_JSONPATH: "$.content[0].text"
 # AMAZON_BEDROCK_PROMPT_TEMPLATE: "\n{prompt_text}"
 # AMAZON_BEDROCK_PROMPT_INPUT_VAR: "$.inputText"
 # AMAZON_BEDROCK_OUTPUT_JSONPATH: "$.results[0].outputText"
-
-# Copy output to clipboard
-CLIPBOARD_COPY: false
-
-# Used for integration with Quip
-QUIP_TOKEN: "<your_personal_token>"
-QUIP_ENDPOINT: "https://platform.quip.com"
-QUIP_DEFAULT_FOLDER_ID: "<default_folder_for_writing>"

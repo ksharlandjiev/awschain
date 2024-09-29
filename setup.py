@@ -13,7 +13,7 @@ else:
 
 setup(
     name="awschain",
-    version="0.1.1",
+    version="0.1.1.1",
     author="Kamen Sharlandjiev",
     author_email="ksharlandjiev@gmail.com",
     description="A framework for chaining AWS services using the chain of responsibility pattern",
