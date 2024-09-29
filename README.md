@@ -28,7 +28,7 @@ Let’s say you want to process files by first reading their content, performing
 ```python
 from awschain import HandlerFactory, ConfigLoader
 
-# Load config
+# Load your configuration
 ConfigLoader.load_config("/path/to/config.yaml")
 
 # Create the handlers
@@ -88,7 +88,7 @@ If you need to add custom functionality, you can extend the framework by writing
 To create a custom handler, simply subclass the `AbstractHandler` class and implement the `handle` method:
 
 ```python
-from awschainhandlers.abstract_handler import AbstractHandler
+from awschain.handlers import AbstractHandler
 
 class CustomHandler(AbstractHandler):
     def handle(self, request):
@@ -98,9 +98,17 @@ class CustomHandler(AbstractHandler):
         # Pass to the next handler in the chain if applicable
         return super().handle(request)
 ```
+Store the custom handler in a folder and update your config.yaml to point to the custom handlers folder. The framewokr wiill automatically detect the new handler, then you can use it through the HandlerFacotry.get_hanlder method. 
+```python
+my_hanlder = HandlerFactory.get_handler("CustomHandler")
+```
+
+You can also force update the HandlerFacotry local cache if you are dynamically generating handlers. In this case just invoke: 
+```python
+HandlerFacotry.discover_handlers()
+```
 
 ## Contributing
-
 Contributions are welcome! Feel free to open an issue or submit a pull request if you have ideas to improve `awschain`.
 
 ## License
