@@ -9,8 +9,7 @@ class PromptHandler(AbstractHandler):
 
         request.update({"text": prompt})
         return super().handle(request)
-
-
+    
     def load_prompt(self, prompt_file_name, text):
         """
         Loads a prompt from a file in the 'prompts' directory and formats it with the provided text.

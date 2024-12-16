@@ -13,9 +13,25 @@ class AmazonBedrockHandler(AbstractHandler):
         request.update({"text": summary})
         return super().handle(request)
 
+    def configure(self, config):
+        self.model_id = config.get("AMAZON_BEDROCK_MODEL_ID")
+        self.model_props = config.get("AMAZON_BEDROCK_MODEL_PROPS")
+        self.prompt_template = config.get("AMAZON_BEDROCK_PROMPT_TEMPLATE")
+        self.prompt_input_var = config.get("AMAZON_BEDROCK_PROMPT_INPUT_VAR")
+        self.output_jsonpath = config.get("AMAZON_BEDROCK_OUTPUT_JSONPATH")
+
     def summarize_with_retry(self, text: str) -> str:
         try:
-            return invoke_model(text)
+            config = {}
+            if hasattr(self,"model_id"): 
+                config = {
+                    "model_id": self.model_id,
+                    "model_props": self.model_props,
+                    "prompt_template": self.prompt_template,
+                    "prompt_input_var": self.prompt_input_var,
+                    "output_jsonpath": self.output_jsonpath
+                }
+            return invoke_model(text, config)
         except botocore.exceptions.ClientError as e:
             if e.response['Error']['Code'] == 'ValidationException':
                 return self.chunk_and_summarize(text)

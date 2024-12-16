@@ -13,7 +13,7 @@ else:
 
 setup(
     name="awschain",
-    version="0.1.1.1",
+    version="0.1.1.2",
     author="Kamen Sharlandjiev",
     author_email="ksharlandjiev@gmail.com",
     description="A framework for chaining AWS services using the chain of responsibility pattern",
@@ -35,5 +35,10 @@ setup(
     ],
     python_requires=">=3.7",
     install_requires=requirements,  # Optional if requirements.txt doesn't exist
+    entry_points={
+        'console_scripts': [
+            'awschain-cli = awschain.cli:main',
+        ],
+    },    
     test_suite='tests',
 )

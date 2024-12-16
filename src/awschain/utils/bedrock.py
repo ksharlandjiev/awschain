@@ -10,28 +10,27 @@ from jsonpath_ng import jsonpath, parse
 import boto3
 from botocore.client import Config
 
-def invoke_model(prompt_text, modelId=os.environ.get("AMAZON_BEDROCK_MODEL_ID", 'anthropic.claude-v2')):
+def invoke_model(prompt_text, config):
     """
     Summarizes the given text using Amazon Bedrock, based on a prompt specified by prompt_file_name.
     """        
 
     try:
         # boto3_bedrock = bedrock.get_bedrock_client( assumed_role=os.environ.get("BEDROCK_ASSUME_ROLE", None), region=os.environ.get("AWS_DEFAULT_REGION", None))
-        config = Config(connect_timeout=900)
-        boto3_bedrock = boto3.client(service_name="bedrock-runtime", region_name=os.environ.get("AWS_DEFAULT_REGION", 'us-east-1'), config=config)
+        boto3_config = Config(connect_timeout=900)
+        boto3_bedrock = boto3.client(service_name="bedrock-runtime", region_name=os.environ.get("AWS_DEFAULT_REGION", 'us-east-1'), config=boto3_config)
 
     except e:
         print(f"Failed to create Bedrock client: {e}")
         raise e
     
-    body = json.loads(os.environ.get("AMAZON_BEDROCK_MODEL_PROPS", {"max_tokens_to_sample":4096, "temperature":0.5, "top_k":250, "top_p":0.5, "stop_sequences":[] }))
-    prompt_template = os.environ.get("AMAZON_BEDROCK_PROMPT_TEMPLATE", None)
-    prompt_var = os.environ.get("AMAZON_BEDROCK_PROMPT_INPUT_VAR", "prompt")
-    output_json_path = os.environ.get("AMAZON_BEDROCK_OUTPUT_JSONPATH", "$")
+    body = json.loads(os.environ.get("AMAZON_BEDROCK_MODEL_PROPS", config.get("model_props",'{"max_tokens_to_sample":4096, "temperature":0.5, "top_k":250, "top_p":0.5, "stop_sequences":[]}')))
+    prompt_template = os.environ.get("AMAZON_BEDROCK_PROMPT_TEMPLATE", config.get("prompt_template",""))
+    prompt_var = os.environ.get("AMAZON_BEDROCK_PROMPT_INPUT_VAR", config.get("prompt_input_var",""))
+    output_json_path = os.environ.get("AMAZON_BEDROCK_OUTPUT_JSONPATH", config.get("output_jsonpath","$"))
     
     # Format the prompt.
     prompt_template = prompt_template.format(prompt_text=prompt_text) 
-
     # JSONPath expression
     jsonpath_expr = parse(prompt_var)
     # Find the path and set the new content
@@ -47,6 +46,7 @@ def invoke_model(prompt_text, modelId=os.environ.get("AMAZON_BEDROCK_MODEL_ID", 
             body[ str(match.full_path) ] = prompt_template
     
     body = json.dumps(body)
+    modelId = os.environ.get("AMAZON_BEDROCK_MODEL_ID", config.get("model_id", "amazon.titan-text-express-v1"))
     try:
         accept = 'application/json'
         contentType = 'application/json'
