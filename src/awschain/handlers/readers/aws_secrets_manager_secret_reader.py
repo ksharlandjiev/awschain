@@ -2,7 +2,7 @@ from ..abstract_handler import AbstractHandler
 import boto3
 from botocore.exceptions import ClientError
 
-from utils.aws_boto_client_manager import AWSBotoClientManager
+from ...utils.aws_boto_client_manager import AWSBotoClientManager
 
 class AWSSecretsManagerSecretReader(AbstractHandler):
     def handle(self, request: dict) -> dict:

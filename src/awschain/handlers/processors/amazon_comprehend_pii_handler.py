@@ -1,5 +1,5 @@
 from ..abstract_handler import AbstractHandler
-from utils.aws_boto_client_manager import AWSBotoClientManager
+from ...utils.aws_boto_client_manager import AWSBotoClientManager
 
 class AmazonComprehendPIIHandler(AbstractHandler):
 

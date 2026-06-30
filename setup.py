@@ -16,7 +16,7 @@ requirements = [
 
 setup(
     name="awschain",
-    version="0.1.1.3",
+    version="0.1.1.4",
     author="Kamen Sharlandjiev",
     author_email="ksharlandjiev@gmail.com",
     description="A framework for chaining AWS services using the chain of responsibility pattern",
