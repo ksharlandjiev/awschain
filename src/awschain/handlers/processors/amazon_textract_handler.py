@@ -16,8 +16,7 @@ class AmazonTextractHandler(AbstractHandler):
 
         if path:
             print(f"Processing document with Amazon Textract: {path}")
-            if path.startswith('s3://'):
-                
+            if path.startswith('s3://'):                
                 if key.endswith('.pdf'):
                     text =  self._process_pdf(bucket, key)
                 else:
@@ -31,8 +30,18 @@ class AmazonTextractHandler(AbstractHandler):
         return super().handle(request)
 
     def _parse_s3_path(self, s3_path):
-        _, _, bucket, *key = s3_path.split('/', 3)
-        return bucket, '/'.join(key)
+        """Parses an S3 path and returns (bucket, key)."""
+        if not s3_path.startswith("s3://"):
+            raise ValueError(f"Invalid S3 path: {s3_path}")
+
+        parts = s3_path.replace("s3://", "").split("/", 1)
+        bucket = parts[0]
+        
+        if len(parts) == 1:
+            raise ValueError(f"S3 path does not contain an object key: {s3_path}")
+
+        key = parts[1]
+        return bucket, key
 
     def _is_pdf_file(self, key):
         return key.lower().endswith('.pdf')

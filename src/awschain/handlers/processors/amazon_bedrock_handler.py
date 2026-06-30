@@ -33,12 +33,14 @@ class AmazonBedrockHandler(AbstractHandler):
                 }
             return invoke_model(text, config)
         except botocore.exceptions.ClientError as e:
+            print("Error during summarization:", e)
             if e.response['Error']['Code'] == 'ValidationException':
-                return self.chunk_and_summarize(text)
+                
+                return self.chunk_and_summarize(text, config)
             else:
                 raise e
 
-    def chunk_and_summarize(self, text: str) -> str:
+    def chunk_and_summarize(self, text: str, config) -> str:
         max_attempts = 10
         num_chunks = 2
         attempt = 0
@@ -47,7 +49,7 @@ class AmazonBedrockHandler(AbstractHandler):
         while attempt < max_attempts:
             chunks = self.split_text(text, num_chunks)
             try:
-                summaries = [invoke_model(chunk) for chunk in chunks]
+                summaries = [invoke_model(chunk, config) for chunk in chunks]
                 return "\n".join(summaries)
             except botocore.exceptions.ClientError as e:
                 if e.response['Error']['Code'] == 'ValidationException':

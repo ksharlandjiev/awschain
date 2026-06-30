@@ -19,6 +19,46 @@ You can install `awschain` directly from PyPI:
 pip install awschain
 ```
 
+## Configuration
+
+Create a `config.yaml` file in your project root:
+
+```yaml
+# config.yaml
+DEBUG: False
+
+# Custom handlers location
+custom_handlers_path: "handlers"
+
+# AWS Specific configuration
+BEDROCK_ASSUME_ROLE: "None"
+AWS_DEFAULT_REGION: "us-east-1"
+
+# Amazon Transcribe Settings
+# Amazon S3 bucket used for Amazon Transcribe
+BUCKET_NAME: "your-s3-bucket-name"
+S3_FOLDER: "uploads/"
+OUTPUT_FOLDER: "transcriptions/"
+
+# Local download folder
+DIR_STORAGE: "./downloads"
+
+# Amazon Bedrock Settings
+AMAZON_BEDROCK_MODEL_ID: "anthropic.claude-3-5-sonnet-20240620-v1:0"
+AMAZON_BEDROCK_MODEL_PROPS: '{"max_tokens":4096, "anthropic_version": "bedrock-2023-05-31", "messages": [{"role": "user", "content": ""}]}'
+AMAZON_BEDROCK_PROMPT_TEMPLATE: "{prompt_text}"
+AMAZON_BEDROCK_PROMPT_INPUT_VAR: "$.messages[0].content"
+AMAZON_BEDROCK_OUTPUT_JSONPATH: "$.content[0].text"
+```
+
+Load the configuration before using handlers:
+
+```python
+from awschain import ConfigLoader
+
+ConfigLoader.load_config("/path/to/config.yaml")
+```
+
 ## Usage
 
 ## Example Use Case
