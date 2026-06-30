@@ -1,5 +1,6 @@
 import yaml
 from .handlers.handler_factory import HandlerFactory
+import os
 
 class PipelineExecutor:
     @staticmethod
@@ -10,12 +11,17 @@ class PipelineExecutor:
 
             return pipeline_config            
         except FileNotFoundError:
-            print(f"Error: Pipeline file not found at {pipeline_path}")
+            raise FileNotFoundError(f"Pipeline file not found at {pipeline_path}")
         
     def execute(self, pipeline_config: dict, inputs: dict):
         steps = pipeline_config.get("steps", [])
         handler_chain = None
         prev_handler = None
+        
+        # Discover any custom handlers
+        print("Discovering custom hanlders...")
+        if (os.getenv('custom_handlers_path')):
+            HandlerFactory.discover_handlers(os.getenv('custom_handlers_path'))
 
         for step in steps:
             handler_name = step["handler"]

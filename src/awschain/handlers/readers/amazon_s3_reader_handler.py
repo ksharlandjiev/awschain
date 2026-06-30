@@ -16,16 +16,20 @@ class AmazonS3ReaderHandler(AbstractHandler):
         # Update request with the file content
         request.update({"text": file_content})
         
-        print("REQUEST IS:", request)
         return super().handle(request)
 
-    def read_file_content_from_s3(self, s3_object, bucket_name):
+    def read_file_content_from_s3(self, object_key, bucket_name):
         """
         Reads file content from an S3 bucket and returns it as a string.
         """
         s3_client = AWSBotoClientManager.get_client('s3')
-        s3_object = s3_client.get_object(Bucket=bucket_name, Key=s3_object)
-        file_content = s3_object['Body'].read().decode('utf-8')
+        try:
+            response = s3_client.get_object(Bucket=bucket_name, Key=object_key)
+        except s3_client.exceptions.NoSuchKey:
+            raise FileNotFoundError(
+                f"S3 object not found: s3://{bucket_name}/{object_key}"
+            )
+        file_content = response['Body'].read().decode('utf-8')
         
         return file_content
 

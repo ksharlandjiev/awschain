@@ -1,19 +1,22 @@
-import os
 from setuptools import setup, find_packages
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
-# Conditionally load requirements.txt if it exists
-if os.path.exists("requirements.txt"):
-    with open("requirements.txt", "r", encoding="utf-8") as f:
-        requirements = f.read().splitlines()
-else:
-    requirements = []
+# Library dependencies with minimum version bounds.
+# For reproducible dev/CI builds, use requirements.txt (which has exact pins).
+requirements = [
+    "requests>=2.32.3",
+    "boto3>=1.38.27",
+    "python-dotenv>=1.1.0",
+    "backoff>=2.2.1",
+    "jsonpath-ng>=1.7.0",
+    "PyYAML>=6.0.2",
+]
 
 setup(
     name="awschain",
-    version="0.1.1.2",
+    version="0.1.1.3",
     author="Kamen Sharlandjiev",
     author_email="ksharlandjiev@gmail.com",
     description="A framework for chaining AWS services using the chain of responsibility pattern",
